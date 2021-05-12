@@ -1,0 +1,324 @@
+<html>
+<head>
+  <title>Serverless REST API application with Node.js, AWS Lambda</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+    <img src="https://media.licdn.com/mediaC4E12AQFdMNJMkpVG5A" alt="" title="" />
+      <h1><a href="https://www.linkedin.com/pulse/implementing-serverless-rest-api-application-nodejs-aws-hemant-jain">Serverless REST API application with Node.js, AWS Lambda</a></h1>
+    <p class="created">Created on 2020-08-12 17:34</p>
+  <p class="published">Published on 2020-08-12 21:58</p>
+  <div><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQFOym_Gm8sbvw" src="https://media-exp1.licdn.com/dms/image/C4E12AQFOym_Gm8sbvw/article-inline_image-shrink_1000_1488/0/1597253810000?e=1620864000&amp;v=beta&amp;t=zCNgc6XOvwDwjy-EunPz_2uqBgNSdoEBt5eCQMMETkQ"></div><p> In this article, I’ll be making use of the <strong>Serverless</strong> <strong>Framework</strong>&nbsp;to build and deploy a simple Node.js API to <strong>Lambda</strong> and API Gateway. Our data will be stored using Amazon Relational Database Service (RDS) for <strong>PostgreSQL</strong>.</p><h2>Objective</h2><ol><li>Developing a Serverless framework based application using Node.js to build and deploy it to AWS Lambda and AWS API Gateway.</li><li>Backing up the application with an Amazon Relational Database Service (RDS) for PostgreSQL,using pgAdmin for creation of database and table with the required columns.</li><li>Fully verifying the implemented REST APIs using Postman running the application on the localhost server on current machine, later migrated the deployment completely on the AWS Lambda and AWS API Gateway services.</li></ol><h2>Pre-Requisite</h2><ol><li>Node.js version 6.x or later installed locally on your machine. You can get it&nbsp;<a href="https://nodejs.org/en/download/" target="_blank">here</a>.</li><li>An AWS account, which you can create&nbsp;<a href="https://aws.amazon.com/resources/create-account/" target="_blank">here</a>.</li><li>We’ll be using pgAdmin to create our database tables, you can download that&nbsp;<a href="https://www.pgadmin.org/download/" target="_blank">here</a>.</li><li>Postman, a super handy tool we’ll be using to test our API. Get that&nbsp;<a href="https://www.getpostman.com/" target="_blank">here</a>.</li></ol><p>Once you are done with all the pre-requisite installation and setup,we can now proceed ahead in developing the REST API backend application.</p><h2><strong>Installing the Serverless Framework CLI</strong></h2><p>Let’s start by installing the serverless npm package. By using the -g flag, the package is installed globally on your machine.</p><pre spellcheck="false">npm install -g serverless
+</pre><h2>Creating a new project</h2><pre spellcheck="false">serverless
+</pre><p>Running the command&nbsp;<strong><em>serverless</em>&nbsp;</strong>will guide you through creating a new serverless project. </p><p>Select&nbsp;<strong>AWS Node.js</strong>&nbsp;as your template and then provide a meaningful name for the project. I’ll give my project name as <strong>serverless-tutorial-rds</strong>.</p><p>Once you have done with the above command, you would be having the sample serverless framework template folder generated for Node.js app.</p><p>Now to add a <strong>package.json</strong> file by initialising the directory as a new npm package. Firstly navigate into the new projects directory and then run&nbsp;<strong>npm init</strong>. You can use the flag&nbsp;-y&nbsp;to skip the various npm package settings.</p><pre spellcheck="false">cd serverless-tutorial-rds
+npm init -y
+</pre><h2>Project Structure</h2><p>Open the project in your text editor of choice and you’ll see what files were created for us. The&nbsp;<strong>Serverless.yml</strong>&nbsp;file is where we define our functions, the events that trigger them, and the resources they use. The&nbsp;<strong>handler.j<em>s</em></strong><em>&nbsp;</em>file is where we will maintain the logic for our functions.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQGr3CadFdj7WQ" src="https://media-exp1.licdn.com/dms/image/C4E12AQGr3CadFdj7WQ/article-inline_image-shrink_1000_1488/0/1597254421561?e=1620864000&amp;v=beta&amp;t=_0TShMictNLzj1u51TUku09-xdkDTZeAtJy_GJYwupQ"></div><h2>Configuring Amazon Credentials</h2><p>Before we write any code, let’s configure our amazon credentials to ensure we can deploy our project. In a new tab, open the&nbsp;<a href="https://aws.amazon.com/console/" target="_blank">AWS Management Console</a>&nbsp;and navigate to the IAM service.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQEnIAJjJqEXvg" src="https://media-exp1.licdn.com/dms/image/C4E12AQEnIAJjJqEXvg/article-inline_image-shrink_1500_2232/0/1597254586005?e=1620864000&amp;v=beta&amp;t=2TUx38GBcpd-PoTQ260wvADHOqibGPOtc-7mdCC3rg8"></div><p>Select&nbsp;<strong>users</strong>&nbsp;on the sidebar navigation menu and then press&nbsp;<strong>Add user</strong>. Make sure for the access type you select&nbsp;<strong>programmatic access</strong>.</p><p>You should now be prompted to add specific permissions. You can add the user to a group, copy permissions from an existing user or attach inline policies directly. For this project, we’ll create a new group. We’ll need the following permissions:</p><ul><li><strong>AmazonRDSFullAccess</strong></li><li><strong>AWSLambdaFullAccess</strong></li><li><strong>IAMFullAccess</strong></li><li><strong>AmazonAPIGatewayAdministrator</strong></li><li><strong>AWSCloudFormationFullAccess</strong></li></ul><h3><strong>Add your user to the newly created group and then proceed to create the user.</strong></h3><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQGwNgqoqal8rg" src="https://media-exp1.licdn.com/dms/image/C4E12AQGwNgqoqal8rg/article-inline_image-shrink_1000_1488/0/1597254839996?e=1620864000&amp;v=beta&amp;t=Bg5k-7SBvpJca7MNE88-M4GTOvZfZ0PwAJEaiOAtOK4"></div><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4D12AQGQVPl7HQnIAQ" src="https://media-exp1.licdn.com/dms/image/C4D12AQGQVPl7HQnIAQ/article-inline_image-shrink_1000_1488/0/1597268129547?e=1620864000&amp;v=beta&amp;t=i25SVCFMfjMic9nszOsR8J0XNkNJWWu5OPPge9MfKng"></div><p><br></p><p>On successful creation, you should be able to see the&nbsp;Access key ID<em>&nbsp;</em>and the&nbsp;Secret access key<em>.&nbsp;</em>Head back to your terminal and enter the following command to configure your security credentials. Remember to replace ‘<strong>&lt;your_access_key&gt;’ </strong>and <strong>‘&lt;your_secret_key’&gt; with the actual keys.</strong></p><pre spellcheck="false">serverless config credentials --provider aws --key &lt;your_access_key&gt; --secret &lt;your_secret_key&gt;
+</pre><p>You can re-check and view the summary of the user and group IAM created above.Later, in part you can add more users to the same group permitting with the same AWS IAM Policies granted to the group.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQFgWZV-Y2UPKQ" src="https://media-exp1.licdn.com/dms/image/C4E12AQFgWZV-Y2UPKQ/article-inline_image-shrink_1500_2232/0/1597254959933?e=1620864000&amp;v=beta&amp;t=bGsG3agVK2XlW_78vuWE2FTEhUD1GSrIEmKAYqqpFMI"></div><h2>Setting up the Amazon RDS Instance</h2><p>Head over to the&nbsp;<a href="https://console.aws.amazon.com/rds/home?region=us-east-1#" target="_blank">RDS&nbsp;</a>service in the AWS Management Console. Navigate to&nbsp;databases&nbsp;and click&nbsp;create database<em>.&nbsp;</em>Make sure to select&nbsp;free tier&nbsp;for the template.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQFVgkMq30-8UA" src="https://media-exp1.licdn.com/dms/image/C4E12AQFVgkMq30-8UA/article-inline_image-shrink_1000_1488/0/1597260753599?e=1620864000&amp;v=beta&amp;t=K0RKFKR1Rj0lo2tfTlJUrCd0XMwPvwMmS7DeJx1971I"></div><p>Give your database-cluster an appropriate name, and then set username and password credentials for accessing the database.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQETW12fUcAsmQ" src="https://media-exp1.licdn.com/dms/image/C4E12AQETW12fUcAsmQ/article-inline_image-shrink_1000_1488/0/1597260845406?e=1620864000&amp;v=beta&amp;t=cE3ELubvekijZY7hVA5KLcpL9qPcITRzfIRHnGvsgJs"></div><p>To make our lives easier during development and testing, find the dropdown ‘<strong>additional connectivity configuration</strong>’ under ‘<strong>Connectivity</strong>’ and set ‘<strong>publicly accessible</strong>’ to&nbsp;<strong>Yes</strong>.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQGQ2zer4Wiowg" src="https://media-exp1.licdn.com/dms/image/C4E12AQGQ2zer4Wiowg/article-inline_image-shrink_1000_1488/0/1597260888432?e=1620864000&amp;v=beta&amp;t=gbxx64q4IBWlNfVZUzT_pOnDesLix_lNt3MrW2BOHXg"></div><p>The remaining settings can be left at their defaults. It will take a few minutes for Amazon to build the database and make it available for use.</p><h2>Connecting RDS PostgreSQL instance with pgAdmin</h2><p>Now that our database is accessible, we can open <strong>pgAdmin </strong>and use it to connect. On the dashboard, select&nbsp;add new server.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQEyrR4wnaBBVA" src="https://media-exp1.licdn.com/dms/image/C4E12AQEyrR4wnaBBVA/article-inline_image-shrink_1000_1488/0/1597260959383?e=1620864000&amp;v=beta&amp;t=Mp5kp1PRksQkyLeaHUmBYzZDO1_GADmWdTQ36DCvPyg"></div><p>Give your server a name, note this is just for you. By clicking on the&nbsp;connection&nbsp;tab you can input the specific information relating to the database you created.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQHbyl7EspX1TA" src="https://media-exp1.licdn.com/dms/image/C4E12AQHbyl7EspX1TA/article-inline_image-shrink_1000_1488/0/1597261038633?e=1620864000&amp;v=beta&amp;t=TexE2uqb4y89LVOBIiEr0adpXeu6AsS6-BPi0CiUOiQ"></div><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQHdK14AFbVXeQ" src="https://media-exp1.licdn.com/dms/image/C4E12AQHdK14AFbVXeQ/article-inline_image-shrink_1000_1488/0/1597261046964?e=1620864000&amp;v=beta&amp;t=TLtdTlLRB9aD-JMyEPr17sQg73GNLReyiW8lHt6OjXo"></div><h2>Creating Tables</h2><p>Select the database on the left menu, select the&nbsp;<strong>postgres&nbsp;</strong>database, select&nbsp;<strong>Schemas</strong>, select&nbsp;<strong>public</strong>, and then right-click&nbsp;<strong>Tables&nbsp;</strong>and create a new table.</p><p>We’ll set the table name to&nbsp;<strong>todo</strong>&nbsp;and set the columns as follows:</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQE1-8BJOAgFFA" src="https://media-exp1.licdn.com/dms/image/C4E12AQE1-8BJOAgFFA/article-inline_image-shrink_1000_1488/0/1597261111870?e=1620864000&amp;v=beta&amp;t=XjOb8AjjUl2RAFeh076fsgrqVtzsmavfDQJgpBlxxFg"></div><h2>Building the Serverless REST API Architecture</h2><p>We’ll build our API to create, edit and delete Todo objects. It will follow the standard REST architecture, making use of the following HTTP methods:</p><ul><li><strong>GET : To return the Todo objects.</strong></li><li><strong>POST : To create a Todo object.</strong></li><li><strong>PUT : To update a Todo object.</strong></li><li><strong>DELETE : To delete a Todo object.</strong></li></ul><p>Here is my code for the <strong>serverless.yml </strong>file</p><pre spellcheck="false">	service: serverless-tutorial-rds
+	app: server-app
+	
+
+	provider:
+	  name: aws
+	  runtime: nodejs10.x
+	  memorySize: 128
+	  timeout: 30
+	
+
+	functions:
+	
+
+	  getTodo:
+	    handler: handler.getTodo
+	    events:
+	     - http:
+	         path: todo/{id}
+	         method: get
+	         cors: true
+	          
+	  getAllTodos:
+	    handler: handler.getAllTodos
+	    events:
+	     - http:
+	         path: todo
+	         method: get
+	         cors: true
+	
+
+	  createTodo:
+	    handler: handler.createTodo
+	    events:
+	      - http:
+	          path: todo
+	          method: post
+	          cors: true
+	              
+	  updateTodo:
+	    handler: handler.updateTodo
+	    events:
+	      - http:
+	          path: todo/{id}
+	          method: put
+	          cors: true
+	          
+	  deleteTodo:
+	    handler: handler.deleteTodo
+	    events:
+	      - http:
+	          path: todo/{id}
+              method: delete
+              cors: true
+</pre><h2>Database config</h2><p>In the root directory, create a new folder called&nbsp;config&nbsp;and then create a new file inside of this folder called&nbsp;<strong>db.js</strong>. </p><p>From this file we will export our database credentials as follows:</p><pre spellcheck="false">module.exports =  {
+
+	    database: 'postgres',
+	    host: 'xxxx.amazonaws.com',
+	    port: '5432',
+   	    user: 'xxx',
+        password: 'xxx'
+}
+</pre><p>Make sure to add this file to your&nbsp;<strong>.gitignore</strong>&nbsp;before committing to GitHub.</p><h2>Postgresql-easy</h2><p>In order to query the database, we’ll use the npm package postgresql-easy.</p><pre spellcheck="false">npm install postgresql-easy
+</pre><p>Now, in the root directory create a file called&nbsp;<strong>db_connect.js</strong>. In this file, we’ll import the db config file, import the <strong>postgresql-easy module</strong> and then create and export a new postgres connection.</p><pre spellcheck="false">const PgConnection = require('postgresql-easy');
+</pre><pre spellcheck="false">c
+const dbConfig = require('./config/db');
+const pg = new PgConnection(dbConfig);
+
+module.exports = pg;
+</pre><h2>Handler.js</h2><p>At the top of the handler.js file, import the db_connect file.</p><pre spellcheck="false">const db = require('./db_connect');
+</pre><p>Now let’s write the functions to handle each of the possible requests.</p><h2>getAllTodos</h2><p>The function<strong>&nbsp;db.getAll</strong>&nbsp;takes a table name as an argument and returns all of its records.</p><pre spellcheck="false">module.exports.getAllTodos = (event, context, callback) =&gt; {
+	    context.callbackWaitsForEmptyEventLoop = false;
+	    db.getAll('todo')
+	        .then(res =&gt; {
+	            callback(null, {
+	                statusCode: 200,
+	                body: JSON.stringify(res)
+	            })
+	        })
+	        .catch(e =&gt; {
+	            console.log(e);
+	            callback(null, {
+	                statusCode: e.statusCode || 500,
+	                body: 'Error: Could not find Todos: ' + e
+	            })
+
+	        })
+
+</pre><pre spellcheck="false">	};
+
+
+
+</pre><h2>getTodo</h2><p>The function&nbsp;<strong>db.getById</strong>&nbsp;takes two arguments. The first is the Table name and the second is the Id of the record to return. For this function to work, the table must have a column named&nbsp;id.</p><pre spellcheck="false">module.exports.getTodo = (event, context, callback) =&gt; {
+	    context.callbackWaitsForEmptyEventLoop = false;
+	    db.getById('todo', event.pathParameters.id)
+	    .then(res =&gt; {
+	        callback(null,{
+	            statusCode: 200,
+	            body: JSON.stringify(res)
+	        })
+	    })
+	    .catch(e =&gt; {
+	        callback(null,{
+	            statusCode: e.statusCode || 500,
+	            body: "Could not find Todo: " + e
+	        })
+	    })
+
+</pre><pre spellcheck="false">	};
+</pre><h2>createTodo</h2><p>The function&nbsp;<strong>db.insert</strong>&nbsp;takes two arguments: the table name and the data of the record to be created.</p><pre spellcheck="false">module.exports.createTodo = (event, context, callback) =&gt; {
+  context.callbackWaitsForEmptyEventLoop = false;
+  const data ​= JSON.parse(event.body);
+  db.insert('todo', data)
+    .then(res =&gt; {
+      callback(null,{
+        statusCode: 200,
+        body: "Todo Created!" + res
+      })
+    })
+    .catch(e =&gt; {
+      callback(null,{
+        statusCode: e.statusCode || 500,
+        body: "Could not create Todo " + e
+      })
+    })
+ 
+</pre><pre spellcheck="false">};
+
+</pre><h2>updateTodo</h2><p>The function&nbsp;<strong>db.updateById</strong>&nbsp;takes three arguments: the table name, the id of the record to be updated, and the data to be updated with. The id is pulled from the URL of the request by using&nbsp;<strong>event.pathParameters.id</strong>.</p><pre spellcheck="false">module.exports.updateTodo = (event, context, callback) =&gt; {
+  context.callbackWaitsForEmptyEventLoop = false;
+  const data ​= JSON.parse(event.body);
+  db.updateById('todo', event.pathParameters.id, data)
+    .then(res =&gt; {
+      callback(null,{
+        statusCode: 200,
+        body: "Todo Updated!" + res
+      })
+    })
+    .catch(e =&gt; {
+      callback(null,{
+        statusCode: e.statusCode || 500,
+        body: "Could not update Todo" + e
+      })
+    }) 
+
+};
+</pre><h2>deleteTodo</h2><p>The function&nbsp;<strong>db.deleteById</strong>&nbsp;takes two arguments: the table name, and the id of the record to be deleted.</p><pre spellcheck="false">module.exports.deleteTodo = (event, context, callback) =&gt; {
+  context.callbackWaitsForEmptyEventLoop = false;
+  db.deleteById('todo', event.pathParameters.id)
+    .then(res =&gt; {
+      callback(null,{
+        statusCode: 200,
+        body: "Todo Deleted!"
+      })
+    })
+    .catch(e =&gt; {
+      callback(null,{
+        statusCode: e.statusCode || 500,
+        body: "Could not delete Todo" + e
+      })
+    })
+
+ 
+</pre><pre spellcheck="false">};
+</pre><h2>Project Testing</h2><p>The&nbsp;<strong>serverless-offline</strong>&nbsp;node module allows you to run the server locally such that you can test if the requests are handled correctly.</p><pre spellcheck="false">npm install serverless-offline
+</pre><p>In order to use the module, it needs to be added as a&nbsp;plugin&nbsp;to the&nbsp;<strong>serverless.yml</strong>&nbsp;file. Add the following lines to&nbsp;<strong>serverless.yml</strong> file so that this plugin can help us with the offline local machine testing.</p><pre spellcheck="false">plugins:
+
+</pre><pre spellcheck="false">  - serverless-offline
+
+</pre><p>To run the server <strong>locally</strong>, run the following command.</p><pre spellcheck="false">serverless offline
+</pre><p>After running the command you should see the available routes printed in the terminal.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQGcMzzHErnpOQ" src="https://media-exp1.licdn.com/dms/image/C4E12AQGcMzzHErnpOQ/article-inline_image-shrink_1000_1488/0/1597264200800?e=1620864000&amp;v=beta&amp;t=gsBOa2oOL5pFLxj7YIGfQTgH5_Hzf1g3gehcJeGu6eg"></div><h2>POST</h2><p>We can use Postman to send requests to these routes and see if our code functions as intended. Let’s start with a POST request to test todo creation. In the body of the request, select the&nbsp;raw&nbsp;option and provide the data for the Todo as a JSON object.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQEDwWlPrHdxKQ" src="https://media-exp1.licdn.com/dms/image/C4E12AQEDwWlPrHdxKQ/article-inline_image-shrink_1000_1488/0/1597268153052?e=1620864000&amp;v=beta&amp;t=RH1a2CsPZDA2klO4j-C1rCKyp1t6-cCIr46PwGxRyMM"></div><h2>GET</h2><p>To test if the record was saved in the database, send a GET request to&nbsp;<strong>http://localhost:3000/todo</strong> to get all todo Plan. If successful, you should see something like this:</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQEbZHhBaZLjTQ" src="https://media-exp1.licdn.com/dms/image/C4E12AQEbZHhBaZLjTQ/article-inline_image-shrink_1000_1488/0/1597268171859?e=1620864000&amp;v=beta&amp;t=mSOOyNLbJpyWtUDa_elzhnzVrNlsEhNIeMo6ouTacFQ"></div><h2>GET</h2><p>To test if the record was saved in the database, send a GET request to&nbsp;<strong>http://localhost:3000/todo/{id}</strong> to get the specific todo Plan with id. If successful, you should see something like this:</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQHsp5yYSqnOLQ" src="https://media-exp1.licdn.com/dms/image/C4E12AQHsp5yYSqnOLQ/article-inline_image-shrink_1000_1488/0/1597268196854?e=1620864000&amp;v=beta&amp;t=nWSWYd-CTMyEJ6dnuVyVI58xt5utwwRQcOQPcEv6ISk"></div><h2>PUT</h2><p>To test the update method, sent a PUT request to edit todo Plan as follows. I’m going to change the ‘completed’ attributed of my todo to ‘true’.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQF8keaQfASFkA" src="https://media-exp1.licdn.com/dms/image/C4E12AQF8keaQfASFkA/article-inline_image-shrink_1000_1488/0/1597268216131?e=1620864000&amp;v=beta&amp;t=Yxvr2RpCUcthCkRgc8F8XOy0dlf1iYhPapGKwcL4D8c"></div><h2>DELETE</h2><p>And finally, the delete request to delete the todo Plan added.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4E12AQGhIV6CzySVNg" src="https://media-exp1.licdn.com/dms/image/C4E12AQGhIV6CzySVNg/article-inline_image-shrink_1000_1488/0/1597268232233?e=1620864000&amp;v=beta&amp;t=m8UxO4TBDhJTOEL-ucDd0DYnUS3WfGcZ0_Z3rWHNkv4"></div><h2>Deploying</h2><p>The last step is to deploy the <strong>API to AWS lambda</strong>. The serverless framework makes this really easy, all we need to do is run the following command.</p><p>One step and rest all your REST API would be migrated on AWS platform and served from AWS Lambda and AWS API Gateway service.</p><pre spellcheck="false">serverless deploy
+
+</pre><h2>Conclusion</h2><p>Your API is now ready to to go and serve as a complete statefule backend application...!!</p><h2>If you’re interested you can find my code <a href="https://github.com/jainhemant163/serverless-rest-api-with-aws-lambda" target="_blank">here </a>!</h2><p><br></p></div>
+</body>
+</html>
